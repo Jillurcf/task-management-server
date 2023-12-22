@@ -60,15 +60,14 @@ async function run() {
       console.log(result);
     });
 
-    // app.get("/api/v1/allFood/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: new ObjectId(id) };
-    //   const result = await allFoodCollection.findOne(query);
-    //   res.send(result);
-    //   console.log(result);
-    // });
+    app.delete("/api/v1/task/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await newTaskCollection.deleteOne(query);
+      res.send(result);
+      console.log(result);
+    });
 
-    // });
 
     // Task related api
     app.post("/api/v1/newTask", async (req, res) => {
@@ -79,111 +78,6 @@ async function run() {
 
 
 
-
-
-    app.put('/api/v1/allFood/:id', async(req, res)=>{
-      const id = req.params.id;
-      const filter = { _id: new ObjectId(id)}
-      const options = {upsert: true};
-      const updatedFood = req.body;
-      const food = {
-          $set: {
-
-            food_name: updatedFood.food_name,
-            food_image: updatedFood.food_image,
-            food_category: updatedFood.food_category,
-            quantity: updatedFood.quantity,
-            price: updatedFood.price,
-            count: updatedFood.count,
-            userName: updatedFood.userName,
-            email: updatedFood.email,
-            origin: updatedFood.origin,
-            description: updatedFood.description,               
-          }
-      }
-      const result = await allFoodCollection.updateOne(filter, food, options )
-      res.send(result)
-      console.log(result);
-  })
-
-
-    app.put('/api/v1/allFood/update/:id', async(req, res)=>{
-      const id = req.params.id;
-      console.log(id);
-      const filter = { _id: new ObjectId(id)}
-      // const options = {upsert: true};
-      const updatedCount = req.body;
-      console.log(updatedCount);
-      const food = {
-          $set: {        
-            count: updatedCount.count,                    
-          }
-      }
-      const result = await allFoodCollection.updateOne(filter, food)
-      res.send(result)
-      console.log(result);
-  })
-
-   app.put('/api/v1/allFood/quantity/:id', async(req, res)=>{
-    const id = req.params.id;
-    const filter = { _id: new ObjectId(id)}
-    const updateQuantity = req.body;
-    const foodQuantity = {
-      $set: {
-        quantity: updateQuantity.quantity,
-      }
-    }
-    const result = await allFoodCollection.updateOne(filter, foodQuantity);
-    res.send(result)
-    console.log(result);
-   })
-
-    app.delete("/api/v1/allFood/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await allFoodCollection.deleteOne(query);
-      res.send(result);
-    });
-
-
-
-    // Pagination related api
-    app.get("/api/v1/allFoodCount", async (req, res) => {
-      const count = await allFoodCollection.estimatedDocumentCount();
-      res.send({ count });
-      const id = req.pa;
-      console.log({ count });
-    });
-    // user related api
-
-    app.post("/api/v1/user", async (req, res) => {
-      const user = req.body;
-      const result = await userCollection.insertOne(user);
-      res.send(result);
-      console.log(result);
-    });
-
-    app.post("/api/v1/purchase", verifyToken, async (req, res) => {
-      const purchase = req.body;
-      const result = await purchaseCollection.insertOne(purchase);
-      res.send(result);
-    });
-
-    app.get("/api/v1/purchase/food/:email",  async(req, res)=>{
-      const emailToFind = req.params.email;
-      const query = { email : emailToFind};
-      const result = await purchaseCollection.find(query).toArray();
-      res.send(result);
-      console.log(result);
-    })
-
-    app.delete('/api/v1/purchase/delete/:id', async(req, res)=>{
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await purchaseCollection.deleteOne(query);
-      res.send(result);
-    })
-    
 
 
     // auth related api
