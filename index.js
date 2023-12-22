@@ -12,8 +12,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "task-management-platform-a444f.web.app",
-      "task-management-platform-a444f.firebaseapp.com",
+      "https://task-management-platform-a444f.web.app",
+      "https://task-management-platform-a444f.firebaseapp.com",
     ],
     credentials: true,
   })
@@ -50,44 +50,35 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
-    const allFoodCollection = client.db("allFoodDB").collection("allFood");
+    const newTaskCollection = client.db("newTaskdb").collection("newTask");
    
 
-    // AllFood Related Api
-    app.get("/api/v1/allFood", async (req, res) => {
-      const page = parseInt(req.query.page);
-      const size = parseInt(req.query.size);
-      console.log("pagination", req.query);
-      const result = await allFoodCollection
-        .find()
-        .sort({count: -1})
-        .skip(page * size)
-        .limit(size)
-        .toArray();
-      res.send(result);
-    });
-
-    app.get("/api/v1/allFood/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await allFoodCollection.findOne(query);
+    
+    app.get("/api/v1/newTask", async (req, res) => {
+      const result = await newTaskCollection.find().toArray();
       res.send(result);
       console.log(result);
     });
 
-    app.get("/api/v1/allFood/food/:email", async (req, res) => {
-      const emailToFind = req.params.email;
-      const query = { email : emailToFind};
-      const result = await allFoodCollection.find(query).toArray();
+    // app.get("/api/v1/allFood/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) };
+    //   const result = await allFoodCollection.findOne(query);
+    //   res.send(result);
+    //   console.log(result);
+    // });
+
+    // });
+
+    // Task related api
+    app.post("/api/v1/newTask", async (req, res) => {
+      const newTask = req.body;
+      const result = await newTaskCollection.insertOne(newTask);
       res.send(result);
-      console.log(result);
     });
 
-    app.post("/api/v1/allFood", async (req, res) => {
-      const allFood = req.body;
-      const result = await allFoodCollection.insertOne(allFood);
-      res.send(result);
-    });
+
+
 
 
     app.put('/api/v1/allFood/:id', async(req, res)=>{
